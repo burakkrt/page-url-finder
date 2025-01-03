@@ -51,15 +51,20 @@
   }
 
   .content {
-    min-height: 100px;
+    min-height: 300px;
     margin-top: 30px;
 
-    .loading,
-    .empty-data {
-      display: block;
-      text-align: center;
-      font-size: 18px;
-      color: #4c585b;
+    &.is-loading,
+    &.empty-data {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+
+      .info-text {
+        font-size: 18px;
+        color: #4c585b;
+      }
     }
 
     .data-list {
@@ -69,15 +74,43 @@
       .data-list-actions {
         display: flex;
         flex-direction: row;
-        justify-content: flex-end;
-        align-items: center;
-        gap: 6px;
+        justify-content: space-between;
+        align-items: flex-end;
+        gap: 16px;
+        margin-bottom: 12px;
 
-        .info {
+        .search-url {
+          a {
+            color: #4da1a9;
+          }
+        }
+
+        .left {
+          display: flex;
+          flex-direction: row;
+          align-items: center;
+          justify-content: flex-start;
+          gap: 10px;
         }
       }
 
       li {
+        padding: 2px 0;
+        color: #2a3335;
+        background-color: #f8fafc;
+
+        &:hover {
+          background-color: #f1f2f3;
+        }
+
+        &:nth-child(odd) {
+          background-color: white;
+
+          &:hover {
+            background-color: #f1f2f3;
+          }
+        }
+
         a {
           color: #091057;
           &:hover {

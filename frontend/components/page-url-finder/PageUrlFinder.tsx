@@ -1,10 +1,11 @@
-import React, { useEffect, useState } from "react";
+import React, { Ref, useEffect, useRef, useState } from "react";
 import { IFilterListing, IFormData, IPageUrlFinderProps } from "./types";
 import { useMutation } from "react-query";
 import { fetchData } from "@/utils/functions";
 import UrlFinderFilter from "../url-finder-filter";
 import DownloadDataTxt from "../download-data-txt";
 import { BASE_FINDER_API_URL } from "@/utils/constants";
+import classNames from "classnames";
 
 const initialFormDataValue: IFormData = {
   pathname: "",
@@ -14,6 +15,8 @@ const initialFormDataValue: IFormData = {
 
 const PageUrlFinder: React.FC<IPageUrlFinderProps> = () => {
   const [formData, setFormData] = useState<IFormData>(initialFormDataValue);
+  const [localData, setLocalData] = useState<any>(null);
+  const inputRef: Ref<HTMLInputElement> | null = useRef(null);
 
   const handleChange = (
     key: keyof IFormData,
@@ -33,14 +36,34 @@ const PageUrlFinder: React.FC<IPageUrlFinderProps> = () => {
 
   const handleSubmit = (e: React.SyntheticEvent) => {
     e.preventDefault();
-    if (formData.pathname) {
-      mutate();
+    handleChange("filterListing", IFilterListing["all-data"]);
+    if (!formData.pathname) {
+      setLocalData(null);
+      return;
     }
+    mutate();
+    inputRef.current?.blur();
   };
 
   useEffect(() => {
-    mutate();
+    if (!formData.pathname) {
+      setLocalData(null);
+    } else {
+      mutate();
+    }
   }, [formData.filterListing]);
+
+  useEffect(() => {
+    if (data) {
+      setLocalData(data);
+    }
+  }, [data]);
+
+  useEffect(() => {
+    if (formData.pathname.length === 0) {
+      setLocalData(null);
+    }
+  }, [formData.pathname]);
 
   return (
     <div className="page-url-finder">
@@ -50,6 +73,7 @@ const PageUrlFinder: React.FC<IPageUrlFinderProps> = () => {
           type="text"
           name="Page Pathname"
           className="input-pathname"
+          ref={inputRef}
           placeholder={"Sayfa pathname.Örn. izmir, where-to-go..."}
           onChange={(e) => handleChange("pathname", e.target.value)}
           value={formData.pathname}
@@ -58,47 +82,61 @@ const PageUrlFinder: React.FC<IPageUrlFinderProps> = () => {
           Filtrele
         </button>
       </form>
-      {}
+      <UrlFinderFilter formData={formData} setFormData={setFormData} />
 
-      <div className="content">
+      <div
+        className={classNames(
+          "content",
+          isLoading && "is-loading",
+          !isLoading && (!localData || localData.length === 0) && "empty-data"
+        )}
+      >
         {isLoading && (
-          <span className="loading">Veriler işleniyor, lütfen bekleyin...</span>
+          <span className="info-text">
+            Veriler işleniyor, lütfen bekleyin...
+          </span>
         )}
 
-        {!isLoading && (!data || data.length === 0) && (
-          <span className="empty-data">
+        {!isLoading && (!localData || localData.length === 0) && (
+          <span className="info-text">
             Herhangi bir veri bulunamadı veya bu sayfa mevcut değil.
           </span>
         )}
 
-        {data && data?.length > 0 && (
-          <>
-            <UrlFinderFilter formData={formData} setFormData={setFormData} />
+        {localData &&
+          localData?.length > 0 &&
+          !isLoading &&
+          formData.pathname.length > 0 && (
             <ul className="data-list">
               <div className="data-list-actions">
-                <span className="info">
-                  Toplam {data?.length} veri listeleniyor.
+                <span className="search-url">
+                  <a href={localData?.searchUrl} target="_blank">
+                    {localData?.searchUrl}
+                  </a>{" "}
+                  için sonuçları görüntülüyorsun.
                 </span>
-                <DownloadDataTxt
-                  data={data?.data}
-                  searchKey={formData.pathname}
-                />
+                <div className="left">
+                  <span>Toplam {localData?.length} veri listeleniyor.</span>
+                  <DownloadDataTxt
+                    data={localData?.data}
+                    searchKey={formData.pathname}
+                  />
+                </div>
               </div>
 
-              {data?.data?.map((element: string, i: number) => (
+              {localData?.data?.map((element: string, i: number) => (
                 <li key={`data-item-${i}`}>
                   {formData.isClickablity ? (
                     <a href={element} target="_blank">
                       {element}
                     </a>
                   ) : (
-                    element
+                    <span>{element}</span>
                   )}
                 </li>
               ))}
             </ul>
-          </>
-        )}
+          )}
       </div>
     </div>
   );

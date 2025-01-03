@@ -19,7 +19,10 @@ const UrlFinderFilter: React.FC<IUrlFinderFilterProps> = ({
   return (
     <div className="url-finder-filter">
       <div className="filter-item dropdown">
-        <select onChange={(e) => handleChange("filterListing", e.target.value)}>
+        <select
+          onChange={(e) => handleChange("filterListing", e.target.value)}
+          value={formData.filterListing}
+        >
           <option value={IFilterListing["all-data"]}>
             Tüm verileri listele
           </option>
