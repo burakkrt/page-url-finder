@@ -1,0 +1,57 @@
+# Bağımlılıklar
+**/node_modules/
+**/bower_components/
+
+# Paket yöneticisi kilit dosyaları
+**/package-lock.json
+**/yarn.lock
+
+# Derleme çıktıları
+**/dist/
+**/build/
+**/out/
+**/.next/
+
+# Geçici dosyalar
+**/.temp/
+**/.cache/
+**/.eslintcache
+**/.rpt2_cache/
+**/.tsbuildinfo
+
+# Çalışma zamanı dosyaları
+**/.pnp
+**/.pnp.*
+**/coverage/
+**/logs/
+**/*.log
+
+# İşletim sistemi ve editör dosyaları
+.DS_Store
+Thumbs.db
+*.swp
+*.swo
+*.swn
+*.swd
+*.swt
+*.swm
+*.swl
+*.swr
+*.sws
+*.swq
+*.swy
+*.swz
+*.swa
+*.swb
+*.swc
+*.swd
+*.swe
+*.swf
+*.swg
+*.swh
+*.swi
+*.swj
+*.swk
+*.swl
+*.swm
+*.

@@ -1,0 +1,11 @@
+.download-data-txt {
+  cursor: pointer;
+  border: 1px solid rgba(0, 0, 0, 0.3);
+  padding: 4px 8px;
+  border-radius: 4px;
+  transition: all 130ms ease-in-out;
+
+  &:hover {
+    border: 1px solid rgba(0, 0, 0, 0.5);
+  }
+}
