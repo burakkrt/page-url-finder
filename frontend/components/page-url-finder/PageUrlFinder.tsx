@@ -4,13 +4,15 @@ import { useMutation } from "react-query";
 import { fetchData } from "@/utils/functions";
 import UrlFinderFilter from "../url-finder-filter";
 import DownloadDataTxt from "../download-data-txt";
-import { BASE_FINDER_API_URL } from "@/utils/constants";
 import classNames from "classnames";
+import LanguageSelect from "../language-select";
+import { languages } from "../language-select/LanguageSelect";
 
 const initialFormDataValue: IFormData = {
   pathname: "",
   isClickablity: false,
   filterListing: IFilterListing["all-data"],
+  searchLanguage: languages.find((lang) => lang.default) || languages[0],
 };
 
 const PageUrlFinder: React.FC<IPageUrlFinderProps> = () => {
@@ -30,7 +32,11 @@ const PageUrlFinder: React.FC<IPageUrlFinderProps> = () => {
 
   const { mutate, data, isLoading, error } = useMutation(async () =>
     fetchData({
-      endpoint: `/scrape-links?pagePath=${formData.pathname}&linkType=${formData.filterListing}`,
+      endpoint: `/scrape-links?pagePath=${
+        !formData.searchLanguage.default
+          ? `${formData.searchLanguage.value}/`
+          : ""
+      }${formData.pathname}&linkType=${formData.filterListing}`,
     })
   );
 
@@ -69,15 +75,27 @@ const PageUrlFinder: React.FC<IPageUrlFinderProps> = () => {
     <div className="page-url-finder">
       <h3 className="title">Sayfa içerisinde bağlantıları ara</h3>
       <form className="form" onSubmit={handleSubmit}>
-        <input
-          type="text"
-          name="Page Pathname"
-          className="input-pathname"
-          ref={inputRef}
-          placeholder={"Sayfa pathname.Örn. izmir, where-to-go..."}
-          onChange={(e) => handleChange("pathname", e.target.value)}
-          value={formData.pathname}
-        />
+        <LanguageSelect formData={formData} setFormData={setFormData} />
+        <div
+          className={classNames(
+            "input-pathname-layout",
+            !formData.searchLanguage.default && "lang-space"
+          )}
+        >
+          <input
+            type="text"
+            name="Page Pathname"
+            className="input-pathname"
+            ref={inputRef}
+            placeholder={"Sayfa pathname.Örn. izmir, where-to-go..."}
+            onChange={(e) => handleChange("pathname", e.target.value)}
+            value={formData.pathname}
+          />
+          <span className="language-prefix">
+            {!formData.searchLanguage.default && formData.searchLanguage.value}
+          </span>
+        </div>
+
         <button type="submit" className="button-submit">
           Filtrele
         </button>
@@ -120,6 +138,7 @@ const PageUrlFinder: React.FC<IPageUrlFinderProps> = () => {
                   <DownloadDataTxt
                     data={localData?.data}
                     searchKey={formData.pathname}
+                    language={formData.searchLanguage}
                   />
                 </div>
               </div>

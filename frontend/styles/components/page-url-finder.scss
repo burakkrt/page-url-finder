@@ -1,4 +1,5 @@
 .page-url-finder {
+  position: relative;
   padding: 24px 0;
 
   .title {
@@ -16,22 +17,48 @@
     align-items: center;
     justify-content: center;
     gap: 12px;
+    background-color: white;
 
-    .input-pathname {
-      padding: 6px 16px;
-      border-radius: 16px;
-      font-size: 16px;
-      letter-spacing: 0.2px;
-      font-size: var(--font-geist-mono);
-      color: #387478;
-      background-color: #f8fafc;
-      border: 1px solid #bcccdc;
+    .input-pathname-layout {
+      $inputPaddingHorizontal: 16px;
+      position: relative;
       width: 100%;
       max-width: 340px;
 
-      &:focus {
-        outline: none;
-        box-shadow: 0 0 0 2px rgba(217, 234, 253, 0.3);
+      .input-pathname {
+        padding: 6px $inputPaddingHorizontal;
+        border-radius: 16px;
+        font-size: 16px;
+        letter-spacing: 0.2px;
+        font-size: var(--font-geist-mono);
+        color: #387478;
+        background-color: #f8fafc;
+        border: 1px solid #bcccdc;
+        width: 100%;
+
+        &:focus {
+          outline: none;
+          box-shadow: 0 0 0 2px rgba(217, 234, 253, 0.3);
+        }
+      }
+
+      &.lang-space {
+        .input-pathname {
+          padding-left: 74px !important;
+        }
+      }
+
+      .language-prefix {
+        position: absolute;
+        transform: translateY(-50%);
+        top: 50%;
+        left: $inputPaddingHorizontal;
+        line-height: 1;
+        width: 52px;
+        opacity: 0.6;
+        border-right: 1px solid rgba(0, 0, 0, 0.3);
+        user-select: none;
+        pointer-events: none;
       }
     }
 

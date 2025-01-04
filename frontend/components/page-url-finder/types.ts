@@ -1,3 +1,5 @@
+import { ILanguage } from "../language-select/types";
+
 export enum IFilterListing {
   "all-data" = "all-data",
   "external-links" = "external-links",
@@ -8,6 +10,7 @@ export interface IFormData {
   pathname: string;
   isClickablity: boolean;
   filterListing: IFilterListing;
+  searchLanguage: ILanguage;
 }
 
 export interface IPageUrlFinderProps {}

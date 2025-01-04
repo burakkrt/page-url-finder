@@ -4,13 +4,19 @@ import { IDownloadDataTxtProps } from "./types";
 const DownloadDataTxt: React.FC<IDownloadDataTxtProps> = ({
   data,
   searchKey,
+  language,
 }) => {
   const [isLoading, setIsLoading] = useState(false);
+
+  const fileTitle = `Aşağıdaki ifadeler "${
+    !language?.default ? `${language?.value}/` : ""
+  }${searchKey}" sayfasındaki filtrelenmiş değerleri göstermektedir.`;
 
   const handleDownload = () => {
     if (data) {
       setIsLoading(true);
-      const fileContent = data.join("\n");
+      let fileContent = fileTitle + "\n" + "\n";
+      fileContent += data.join("\n");
       const blob = new Blob([fileContent], { type: "text/plain" });
       const link = document.createElement("a");
       link.href = URL.createObjectURL(blob);
